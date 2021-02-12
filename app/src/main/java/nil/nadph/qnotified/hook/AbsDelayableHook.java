@@ -181,6 +181,7 @@ public abstract class AbsDelayableHook implements SwitchConfigItem {
                 AutoRenewFire.INSTANCE,
                 SimplifyChatLongItem.INSTANCE,
                 HideOnlineStatus.INSTANCE,
+                HideChatVipImage.INSTANCE,
             };
         }
         return sAllHooks;
