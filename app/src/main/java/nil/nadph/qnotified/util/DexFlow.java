@@ -1,43 +1,48 @@
-/* QNotified - An Xposed module for QQ/TIM
- * Copyright (C) 2019-2021 xenonhydride@gmail.com
+/*
+ * QNotified - An Xposed module for QQ/TIM
+ * Copyright (C) 2019-2021 dmca@ioctl.cc
  * https://github.com/ferredoxin/QNotified
  *
- * This software is free software: you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
+ * This software is non-free but opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * version 3 of the License, or any later version and our eula as published
+ * by ferredoxin.
  *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this software.  If not, see
- * <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/ferredoxin/QNotified/blob/master/LICENSE.md>.
  */
 package nil.nadph.qnotified.util;
 
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class DexFlow {
+
     private static final byte[] OPCODE_LENGTH_TABLE = new byte[]{
-            1, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 2, 3, 2, 2, 3, 5, 2, 2, 3, 2, 1, 1, 2,
-            2, 1, 2, 2, 3, 3, 3, 1, 1, 2, 3, 3, 3, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0,
-            0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3,
-            3, 3, 3, 1, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3,
-            3, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2};
+        1, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 2, 3, 2, 2, 3, 5, 2, 2, 3, 2, 1, 1, 2,
+        2, 1, 2, 2, 3, 3, 3, 1, 1, 2, 3, 3, 3, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0,
+        0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3,
+        3, 3, 3, 1, 3, 3, 3, 3, 3, 0, 0, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3,
+        3, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2};
 
     public static DexMethodDescriptor[] getDeclaredDexMethods(byte[] buf, String klass) {
         int methodIdsSize = readLe32(buf, 0x58);
@@ -51,15 +56,19 @@ public class DexFlow {
         for (int cn = 0; cn < classDefsSize; cn++) {
             int classIdx = readLe32(buf, classDefsOff + cn * 32);
             int classDataOff = readLe32(buf, classDefsOff + cn * 32 + 24);
-            if (!klass.equals(readType(buf, classIdx))) continue;
+            if (!klass.equals(readType(buf, classIdx))) {
+                continue;
+            }
             p[0] = classDataOff;
-            if (classDataOff == 0) continue;
+            if (classDataOff == 0) {
+                continue;
+            }
             int fieldIdx = 0;
             ArrayList<DexMethodDescriptor> methods = new ArrayList<>();
             int staticFieldsSize = readUleb128(buf, p),
-                    instanceFieldsSize = readUleb128(buf, p),
-                    directMethodsSize = readUleb128(buf, p),
-                    virtualMethodsSize = readUleb128(buf, p);
+                instanceFieldsSize = readUleb128(buf, p),
+                directMethodsSize = readUleb128(buf, p),
+                virtualMethodsSize = readUleb128(buf, p);
             for (int fn = 0; fn < staticFieldsSize + instanceFieldsSize; fn++) {
                 fieldIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
@@ -91,10 +100,17 @@ public class DexFlow {
 
     @NonUiThread
     @Deprecated
-    public static String guessNewInstanceType(byte[] buf, DexMethodDescriptor method, DexFieldDescriptor field) throws NoSuchMethodException {
-        if (buf == null) throw new NullPointerException("dex == null");
-        if (method == null) throw new NullPointerException("method == null");
-        if (field == null) throw new NullPointerException("field == null");
+    public static String guessNewInstanceType(byte[] buf, DexMethodDescriptor method,
+        DexFieldDescriptor field) throws NoSuchMethodException {
+        if (buf == null) {
+            throw new NullPointerException("dex == null");
+        }
+        if (method == null) {
+            throw new NullPointerException("method == null");
+        }
+        if (field == null) {
+            throw new NullPointerException("field == null");
+        }
         int methodIdsSize = readLe32(buf, 0x58);
         int methodIdsOff = readLe32(buf, 0x5c);
         int classDefsSize = readLe32(buf, 0x60);
@@ -107,14 +123,18 @@ public class DexFlow {
         for (int cn = 0; cn < classDefsSize; cn++) {
             int classIdx = readLe32(buf, classDefsOff + cn * 32);
             int classDataOff = readLe32(buf, classDefsOff + cn * 32 + 24);
-            if (!method.declaringClass.equals(readType(buf, classIdx))) continue;
+            if (!method.declaringClass.equals(readType(buf, classIdx))) {
+                continue;
+            }
             p[0] = classDataOff;
-            if (classDataOff == 0) continue;
+            if (classDataOff == 0) {
+                continue;
+            }
             int fieldIdx = 0;
             int staticFieldsSize = readUleb128(buf, p),
-                    instanceFieldsSize = readUleb128(buf, p),
-                    directMethodsSize = readUleb128(buf, p),
-                    virtualMethodsSize = readUleb128(buf, p);
+                instanceFieldsSize = readUleb128(buf, p),
+                directMethodsSize = readUleb128(buf, p),
+                virtualMethodsSize = readUleb128(buf, p);
             for (int fn = 0; fn < staticFieldsSize + instanceFieldsSize; fn++) {
                 fieldIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
@@ -124,7 +144,9 @@ public class DexFlow {
                 methodIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
                 int codeOff = co[0] = readUleb128(buf, p);
-                if (codeOff == 0) continue;
+                if (codeOff == 0) {
+                    continue;
+                }
                 int pMethodId = methodIdsOff + 8 * methodIdx;
                 String name = readString(buf, readLe32(buf, pMethodId + 4));
                 String sig = readProto(buf, readLe16(buf, pMethodId + 2));
@@ -138,7 +160,9 @@ public class DexFlow {
                 methodIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
                 int codeOff = co[0] = readUleb128(buf, p);
-                if (codeOff == 0) continue;
+                if (codeOff == 0) {
+                    continue;
+                }
                 int pMethodId = methodIdsOff + 8 * methodIdx;
                 String name = readString(buf, readLe32(buf, pMethodId + 4));
                 String sig = readProto(buf, readLe16(buf, pMethodId + 2));
@@ -148,7 +172,9 @@ public class DexFlow {
                 }
             }
         }
-        if (dexCodeOffset == -1) throw new NoSuchMethodException(method.toString());
+        if (dexCodeOffset == -1) {
+            throw new NoSuchMethodException(method.toString());
+        }
         int registersSize = readLe16(buf, dexCodeOffset);
         int insSize = readLe16(buf, dexCodeOffset + 2);
         int outsSize = readLe16(buf, dexCodeOffset + 4);
@@ -184,17 +210,28 @@ public class DexFlow {
     }
 
     @NonUiThread
-    public static DexFieldDescriptor guessFieldByNewInstance(byte[] buf, DexMethodDescriptor method, Class<?> instanceClass) throws NoSuchMethodException {
-        if (instanceClass == null) throw new NullPointerException("instanceClass == null");
-        return guessFieldByNewInstance(buf, method, "L" + instanceClass.getName().replace('.', '/') + ";");
+    public static DexFieldDescriptor guessFieldByNewInstance(byte[] buf, DexMethodDescriptor method,
+        Class<?> instanceClass) throws NoSuchMethodException {
+        if (instanceClass == null) {
+            throw new NullPointerException("instanceClass == null");
+        }
+        return guessFieldByNewInstance(buf, method,
+            "L" + instanceClass.getName().replace('.', '/') + ";");
     }
 
     @NonUiThread
     @Deprecated
-    public static DexFieldDescriptor guessFieldByNewInstance(byte[] buf, DexMethodDescriptor method, String instanceClass) throws NoSuchMethodException {
-        if (buf == null) throw new NullPointerException("dex == null");
-        if (method == null) throw new NullPointerException("method == null");
-        if (instanceClass == null) throw new NullPointerException("instanceClass == null");
+    public static DexFieldDescriptor guessFieldByNewInstance(byte[] buf, DexMethodDescriptor method,
+        String instanceClass) throws NoSuchMethodException {
+        if (buf == null) {
+            throw new NullPointerException("dex == null");
+        }
+        if (method == null) {
+            throw new NullPointerException("method == null");
+        }
+        if (instanceClass == null) {
+            throw new NullPointerException("instanceClass == null");
+        }
         int methodIdsSize = readLe32(buf, 0x58);
         int methodIdsOff = readLe32(buf, 0x5c);
         int classDefsSize = readLe32(buf, 0x60);
@@ -207,14 +244,18 @@ public class DexFlow {
         for (int cn = 0; cn < classDefsSize; cn++) {
             int classIdx = readLe32(buf, classDefsOff + cn * 32);
             int classDataOff = readLe32(buf, classDefsOff + cn * 32 + 24);
-            if (!method.declaringClass.equals(readType(buf, classIdx))) continue;
+            if (!method.declaringClass.equals(readType(buf, classIdx))) {
+                continue;
+            }
             p[0] = classDataOff;
-            if (classDataOff == 0) continue;
+            if (classDataOff == 0) {
+                continue;
+            }
             int fieldIdx = 0;
             int staticFieldsSize = readUleb128(buf, p),
-                    instanceFieldsSize = readUleb128(buf, p),
-                    directMethodsSize = readUleb128(buf, p),
-                    virtualMethodsSize = readUleb128(buf, p);
+                instanceFieldsSize = readUleb128(buf, p),
+                directMethodsSize = readUleb128(buf, p),
+                virtualMethodsSize = readUleb128(buf, p);
             for (int fn = 0; fn < staticFieldsSize + instanceFieldsSize; fn++) {
                 fieldIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
@@ -224,7 +265,9 @@ public class DexFlow {
                 methodIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
                 int codeOff = co[0] = readUleb128(buf, p);
-                if (codeOff == 0) continue;
+                if (codeOff == 0) {
+                    continue;
+                }
                 int pMethodId = methodIdsOff + 8 * methodIdx;
                 String name = readString(buf, readLe32(buf, pMethodId + 4));
                 String sig = readProto(buf, readLe16(buf, pMethodId + 2));
@@ -238,7 +281,9 @@ public class DexFlow {
                 methodIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
                 int codeOff = co[0] = readUleb128(buf, p);
-                if (codeOff == 0) continue;
+                if (codeOff == 0) {
+                    continue;
+                }
                 int pMethodId = methodIdsOff + 8 * methodIdx;
                 String name = readString(buf, readLe32(buf, pMethodId + 4));
                 String sig = readProto(buf, readLe16(buf, pMethodId + 2));
@@ -248,7 +293,9 @@ public class DexFlow {
                 }
             }
         }
-        if (dexCodeOffset == -1) throw new NoSuchMethodException(method.toString());
+        if (dexCodeOffset == -1) {
+            throw new NoSuchMethodException(method.toString());
+        }
         int registersSize = readLe16(buf, dexCodeOffset);
         int insSize = readLe16(buf, dexCodeOffset + 2);
         int outsSize = readLe16(buf, dexCodeOffset + 4);
@@ -305,7 +352,9 @@ public class DexFlow {
         for (int cn = 0; cn < classDefsSize; cn++) {
             int classIdx = readLe32(dex, classDefsOff + cn * 32);
             String c = readType(dex, classIdx);
-            if (clz.equals(c)) return true;
+            if (clz.equals(c)) {
+                return true;
+            }
         }
         return false;
     }
@@ -313,12 +362,13 @@ public class DexFlow {
     /**
      * @param buf       the byte array containing the whole dex file
      * @param opcodeOff offset relative to {@code buf}
-     * @param verify    whether to verify if the {@code opcodeOff} is aligned to opcode,
-     *                  return {@code null} if the offset failed the verification
+     * @param verify    whether to verify if the {@code opcodeOff} is aligned to opcode, return
+     *                  {@code null} if the offset failed the verification
      * @return
      */
     @Nullable
-    public static DexMethodDescriptor getDexMethodByOpOffset(byte[] buf, int opcodeOff, boolean verify) {
+    public static DexMethodDescriptor getDexMethodByOpOffset(byte[] buf, int opcodeOff,
+        boolean verify) {
         int methodIdsSize = readLe32(buf, 0x58);
         int methodIdsOff = readLe32(buf, 0x5c);
         int classDefsSize = readLe32(buf, 0x60);
@@ -330,12 +380,14 @@ public class DexFlow {
             int classIdx = readLe32(buf, classDefsOff + cn * 32);
             int classDataOff = readLe32(buf, classDefsOff + cn * 32 + 24);
             p[0] = classDataOff;
-            if (classDataOff == 0) continue;
+            if (classDataOff == 0) {
+                continue;
+            }
             int fieldIdx = 0;
             int staticFieldsSize = readUleb128(buf, p),
-                    instanceFieldsSize = readUleb128(buf, p),
-                    directMethodsSize = readUleb128(buf, p),
-                    virtualMethodsSize = readUleb128(buf, p);
+                instanceFieldsSize = readUleb128(buf, p),
+                directMethodsSize = readUleb128(buf, p),
+                virtualMethodsSize = readUleb128(buf, p);
             for (int fn = 0; fn < staticFieldsSize + instanceFieldsSize; fn++) {
                 fieldIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
@@ -345,10 +397,13 @@ public class DexFlow {
                 methodIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
                 int codeOff = co[0] = readUleb128(buf, p);
-                if (codeOff == 0) continue;
+                if (codeOff == 0) {
+                    continue;
+                }
                 int insnsSize = readLe32(buf, codeOff + 12);
                 if (codeOff + 16 <= opcodeOff && opcodeOff <= codeOff + 16 + insnsSize * 2) {
-                    if (verify && !verifyOpcodeOffset(buf, codeOff + 16, insnsSize * 2, opcodeOff)) {
+                    if (verify && !verifyOpcodeOffset(buf, codeOff + 16, insnsSize * 2,
+                        opcodeOff)) {
                         return null;
                     }
                     String clz = readType(buf, classIdx);
@@ -363,10 +418,13 @@ public class DexFlow {
                 methodIdx += readUleb128(buf, p);
                 int accessFlags = readUleb128(buf, p);
                 int codeOff = co[0] = readUleb128(buf, p);
-                if (codeOff == 0) continue;
+                if (codeOff == 0) {
+                    continue;
+                }
                 int insnsSize = readLe32(buf, codeOff + 12);
                 if (codeOff + 16 <= opcodeOff && opcodeOff <= codeOff + 16 + insnsSize * 2) {
-                    if (verify && !verifyOpcodeOffset(buf, codeOff + 16, insnsSize * 2, opcodeOff)) {
+                    if (verify && !verifyOpcodeOffset(buf, codeOff + 16, insnsSize * 2,
+                        opcodeOff)) {
                         return null;
                     }
                     String clz = readType(buf, classIdx);
@@ -467,7 +525,8 @@ public class DexFlow {
     }
 
     public static int readLe32(byte[] buf, int index) {
-        return buf[index] & 0xFF | (buf[index + 1] << 8) & 0xff00 | (buf[index + 2] << 16) & 0xff0000 | (buf[index + 3] << 24) & 0xff000000;
+        return buf[index] & 0xFF | (buf[index + 1] << 8) & 0xff00
+            | (buf[index + 2] << 16) & 0xff0000 | (buf[index + 3] << 24) & 0xff000000;
     }
 
     public static int readLe16(byte[] buf, int off) {
@@ -476,7 +535,9 @@ public class DexFlow {
 
     public static boolean verifyOpcodeOffset(byte[] buf, int insStart, int bLen, int opcodeOffset) {
         for (int i = 0; i < bLen; ) {
-            if (insStart + i == opcodeOffset) return true;
+            if (insStart + i == opcodeOffset) {
+                return true;
+            }
             int opv = buf[insStart + i] & 0xff;
             int len = OPCODE_LENGTH_TABLE[opv];
             if (len == 0) {

@@ -1,27 +1,30 @@
-/* QNotified - An Xposed module for QQ/TIM
- * Copyright (C) 2019-2021 xenonhydride@gmail.com
+/*
+ * QNotified - An Xposed module for QQ/TIM
+ * Copyright (C) 2019-2021 dmca@ioctl.cc
  * https://github.com/ferredoxin/QNotified
  *
- * This software is free software: you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
+ * This software is non-free but opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU Affero General Public License
  * as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * version 3 of the License, or any later version and our eula as published
+ * by ferredoxin.
  *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * Affero General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this software.  If not, see
- * <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/ferredoxin/QNotified/blob/master/LICENSE.md>.
  */
 package me.singleneuron.data
 
 class PageFaultHighPerformanceFunctionCacheMap : MutableMap<String, Any> {
 
-    private val hashMap : HashMap<String, Any> = HashMap()
-    private val functionHashMap : HashMap<String, ()->Any> = HashMap()
+    private val hashMap: HashMap<String, Any> = HashMap()
+    private val functionHashMap: HashMap<String, () -> Any> = HashMap()
 
     override val size: Int
         get() = functionHashMap.size
@@ -39,14 +42,14 @@ class PageFaultHighPerformanceFunctionCacheMap : MutableMap<String, Any> {
     override fun get(key: String): Any? {
         return try {
             hashMap[key]!!
-        } catch (e:Exception) {
+        } catch (e: Exception) {
             hashMap[key] = functionHashMap[key]!!.invoke()
             hashMap[key]
         }
     }
 
     override fun isEmpty(): Boolean {
-       return functionHashMap.isEmpty()
+        return functionHashMap.isEmpty()
     }
 
     @Deprecated("Avoid to use this method, it will cache all values.")
@@ -72,13 +75,13 @@ class PageFaultHighPerformanceFunctionCacheMap : MutableMap<String, Any> {
     }
 
     override fun put(key: String, value: Any): Any? {
-        putFunctional(key) {value}
+        putFunctional(key) { value }
         return null
     }
 
     override fun putAll(from: Map<out String, Any>) {
         from.keys.forEach {
-            putFunctional(it) {from[it]!!}
+            putFunctional(it) { from[it]!! }
         }
     }
 
@@ -88,7 +91,7 @@ class PageFaultHighPerformanceFunctionCacheMap : MutableMap<String, Any> {
         return null
     }
 
-    fun putFunctional(key: String, function: ()->Any) {
+    fun putFunctional(key: String, function: () -> Any) {
         functionHashMap[key] = function
     }
 
@@ -122,15 +125,15 @@ class PageFaultHighPerformanceFunctionCacheMap : MutableMap<String, Any> {
         return this[key] as String
     }
 
-    fun putLong(key: String, function: ()->Long) {
+    fun putLong(key: String, function: () -> Long) {
         functionHashMap[key] = function
     }
 
-    fun putInt(key: String, function: ()->Int) {
+    fun putInt(key: String, function: () -> Int) {
         functionHashMap[key] = function
     }
 
-    fun putBoolean(key: String, function: ()->Boolean) {
+    fun putBoolean(key: String, function: () -> Boolean) {
         functionHashMap[key] = function
     }
 
@@ -138,7 +141,7 @@ class PageFaultHighPerformanceFunctionCacheMap : MutableMap<String, Any> {
         functionHashMap[key] = function
     }
 
-    fun putFloat(key: String, function: ()->Float) {
+    fun putFloat(key: String, function: () -> Float) {
         functionHashMap[key] = function
     }
 
